@@ -1,0 +1,802 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="NEE Calculator">
+  <title>Norepinephrine Equivalent (NEE) Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif; font-size: 12px;
+      background: #f0f4ff; color: #1a1a1a; padding: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+    h1 { text-align: center; font-size: 18px; color: #003366; margin-bottom: 4px; }
+    .subtitle { text-align: center; font-size: 10px; color: #666; margin-bottom: 14px; line-height: 1.5; }
+
+    .formula-bar {
+      background: #003366; color: #fff; text-align: center;
+      font-family: monospace; font-size: 11px; padding: 10px;
+      border-radius: 6px; margin-bottom: 10px; word-break: break-word; line-height: 1.6;
+    }
+    .badge-wrap { text-align: center; margin-bottom: 10px; }
+    .badge {
+      font-size: 11px; font-weight: bold; background: #e8f4e8;
+      border: 1.5px solid #006633; color: #006633;
+      border-radius: 20px; padding: 5px 18px; display: inline-block;
+    }
+    .reset-btn {
+      display: block; margin: 0 auto 14px auto; padding: 12px 28px;
+      background: #fff; border: 2px solid #003366; border-radius: 24px;
+      color: #003366; font-size: 15px; cursor: pointer;
+      min-height: 48px; min-width: 140px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .reset-btn:active { background: #003366; color: #fff; }
+
+    .section-divider {
+      text-align: center; margin: 20px 0 10px 0;
+      font-size: 13px; font-weight: bold; padding-bottom: 6px;
+    }
+    .section-divider.purple { color: #8833cc; border-bottom: 2px solid #8833cc; }
+    .section-divider.navy   { color: #003366; border-bottom: 2px solid #003366; }
+
+    /* ── SINGLE-AGENT CONVERTER ── */
+    .converter-section {
+      background: #fff; border-radius: 8px; border: 2px solid #8833cc;
+      overflow: hidden; margin-bottom: 14px;
+    }
+    .converter-header {
+      background: #8833cc; color: #fff; padding: 10px 14px;
+      font-size: 13px; font-weight: bold;
+    }
+    .converter-body { padding: 14px; }
+    .converter-grid {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: start;
+    }
+    @media (max-width: 700px) { .converter-grid { grid-template-columns: 1fr; } }
+
+    .converter-panel {
+      background: #f8f8f8; border-radius: 8px; border: 2px solid #ddd; overflow: hidden;
+    }
+    .converter-panel.input-side { border-color: #8833cc; }
+    .converter-panel.output-side { border-color: #003366; }
+    .converter-panel-header {
+      padding: 8px 12px; font-size: 12px; font-weight: bold; color: #fff;
+    }
+    .converter-panel.input-side .converter-panel-header { background: #8833cc; }
+    .converter-panel.output-side .converter-panel-header { background: #003366; }
+    .converter-panel-body { padding: 12px; }
+
+    .converter-arrow {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: #8833cc; padding-top: 40px;
+    }
+    @media (max-width: 700px) {
+      .converter-arrow { padding-top: 0; font-size: 24px; transform: rotate(90deg); }
+    }
+
+    .converter-result-box {
+      background: #f0f4ff; border: 2px solid #003366;
+      border-radius: 6px; padding: 12px; text-align: center; margin-top: 10px;
+    }
+    .converter-result-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .converter-result-value { font-family: monospace; font-size: 24px; font-weight: bold; color: #003366; margin: 4px 0; }
+    .converter-result-unit { font-size: 11px; color: #666; }
+
+    .conv-bd { margin-top: 10px; }
+    .conv-bd-row {
+      display: flex; align-items: stretch; margin-bottom: 4px;
+      border-radius: 4px; overflow: hidden; border: 1px solid #ddd;
+    }
+    .conv-bd-key {
+      background: #8833cc; color: #fff; padding: 6px 10px;
+      font-size: 10px; font-weight: bold; width: 110px; min-width: 110px;
+      display: flex; align-items: center;
+    }
+    .conv-bd-key.ne { background: #003366; }
+    .conv-bd-val {
+      background: #f8f8f8; padding: 6px 10px;
+      font-size: 11px; flex: 1; display: flex; align-items: center; line-height: 1.4;
+    }
+    .mono { font-family: monospace; font-weight: bold; }
+
+    .conv-explain {
+      margin-top: 12px; padding: 10px; border-radius: 6px;
+      font-size: 11px; line-height: 1.6;
+    }
+    .conv-explain.show { background: #f8f0ff; border: 2px solid #8833cc; }
+
+    /* ── CALCULATOR SECTION ── */
+    .calc-section {
+      background: #fff; border-radius: 8px; border: 2px solid #003366;
+      overflow: hidden; margin-bottom: 14px;
+    }
+    .calc-header {
+      background: #003366; color: #fff; padding: 10px 14px;
+      font-size: 13px; font-weight: bold;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 4px;
+    }
+    .calc-body { padding: 14px; }
+
+    .map-row {
+      display: flex; align-items: center; gap: 10px;
+      background: #f0f4ff; border: 2px solid #003366;
+      border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .map-row label { font-size: 12px; font-weight: bold; color: #003366; }
+    .map-input {
+      width: 80px; padding: 10px; border: 2px solid #003366;
+      border-radius: 8px; font-size: 16px; text-align: center;
+      min-height: 48px; -webkit-appearance: none;
+    }
+    .map-input:focus { outline: none; border-color: #0066cc; }
+    .map-unit { font-size: 11px; color: #666; }
+    .map-result { font-family: monospace; font-size: 14px; font-weight: bold; color: #003366; margin-left: auto; }
+
+    .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media (max-width: 700px) { .agent-grid { grid-template-columns: 1fr; } }
+
+    .agent-card {
+      border: 2px solid #ddd; border-radius: 8px; overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .agent-card.active { border-color: #006633; background: #f0fff4; }
+    .agent-card.active .agent-card-header { background: #006633; }
+    .agent-card-header {
+      background: #888; color: #fff; padding: 6px 10px;
+      font-size: 11px; font-weight: bold;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.2s;
+    }
+    .agent-factor { font-size: 9px; font-weight: normal; opacity: 0.8; }
+    .agent-card-body { padding: 8px 10px; }
+    .agent-input-row { display: flex; align-items: center; gap: 8px; }
+    .agent-input {
+      width: 100%; padding: 10px; border: 2px solid #ccc;
+      border-radius: 8px; font-size: 16px; text-align: center;
+      min-height: 48px; -webkit-appearance: none;
+    }
+    .agent-input:focus { outline: none; border-color: #006633; }
+    .agent-unit { font-size: 9px; color: #888; min-width: 70px; text-align: right; }
+    .agent-nee { font-family: monospace; font-size: 11px; color: #006633; font-weight: bold; margin-top: 4px; text-align: right; }
+
+    .nee-result {
+      background: #003366; border-radius: 8px; padding: 16px;
+      text-align: center; margin-top: 14px; color: #fff;
+    }
+    .nee-result-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+    .nee-result-value { font-family: monospace; font-size: 36px; font-weight: bold; margin: 6px 0; }
+    .nee-result-unit { font-size: 12px; opacity: 0.7; }
+    .nee-result-sub { font-size: 11px; margin-top: 8px; opacity: 0.8; line-height: 1.6; }
+
+    .severity-bar {
+      display: flex; justify-content: center; gap: 6px; margin-top: 10px; flex-wrap: wrap;
+    }
+    .severity-pill {
+      font-size: 10px; padding: 4px 12px; border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.3); opacity: 0.4;
+      transition: all 0.2s;
+    }
+    .severity-pill.active { opacity: 1; border-color: #fff; }
+    .sev-none    { background: #28a745; color: #fff; }
+    .sev-low     { background: #ffc107; color: #333; }
+    .sev-mod     { background: #fd7e14; color: #fff; }
+    .sev-high    { background: #dc3545; color: #fff; }
+    .sev-extreme { background: #721c24; color: #fff; }
+
+    .breakdown-section {
+      background: #fff; border-radius: 8px; border: 2px solid #006633;
+      margin-top: 14px; overflow: hidden;
+    }
+    .breakdown-header {
+      background: #006633; color: #fff; padding: 8px 14px;
+      font-size: 13px; font-weight: bold;
+    }
+    .breakdown-body { padding: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .breakdown-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 500px; }
+    .breakdown-table th { background: #006633; color: #fff; padding: 6px 10px; text-align: left; }
+    .breakdown-table td { padding: 6px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+    .breakdown-table tr:nth-child(even) td { background: #f0fff4; }
+    .breakdown-table tr.active-row td { background: #e6ffe6; }
+    .contribution-bar-cell { width: 120px; }
+    .contribution-bar {
+      height: 14px; background: #006633; border-radius: 3px;
+      min-width: 2px; transition: width 0.3s;
+    }
+
+    /* ── LEGEND ── */
+    .legend-section { background: #fff; border-radius: 8px; border: 2px solid #555; margin-top: 14px; overflow: hidden; }
+    .legend-header  { background: #555; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: bold; }
+    .legend-grid    { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; padding: 10px; }
+    @media (max-width: 700px) { .legend-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 400px) { .legend-grid { grid-template-columns: 1fr; } }
+    .legend-card { background: #f8f8f8; border: 1px solid #ccc; border-radius: 4px; padding: 6px; text-align: center; }
+    .legend-code { font-family: monospace; font-size: 14px; font-weight: bold; color: #cc4400; }
+    .legend-name { font-size: 9px; font-weight: bold; color: #333; margin: 2px 0; }
+    .legend-desc { font-size: 9px; color: #666; }
+    .legend-evidence { font-size: 8px; color: #888; margin-top: 2px; font-style: italic; }
+
+    .footnote { font-size: 9px; color: #888; text-align: center; margin-top: 12px; line-height: 1.6; }
+
+    select {
+      display: block; width: 100%;
+      padding: 12px 36px 12px 12px;
+      border: 2px solid #ccc; border-radius: 8px;
+      font-size: 16px; color: #1a1a1a; background-color: #fff;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath fill='%23666' d='M7 9L0 0h14z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      min-height: 48px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    select:focus { outline: none; border-color: #8833cc; }
+
+    .select-group { margin-bottom: 12px; }
+    .select-group label {
+      display: block; font-size: 11px; font-weight: bold; color: #555;
+      margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .empty-state { color: #aaa; font-style: italic; text-align: center; padding: 20px; font-size: 11px; }
+  </style>
+</head>
+<body>
+
+<h1>💉 Norepinephrine Equivalent (NEE) Calculator</h1>
+<div class="subtitle">
+  Updated NEE formula incorporating 11 vasopressor agents<br>
+  Based on Kotani et al. <em>Critical Care</em> (2023) 27:29
+</div>
+
+<div class="formula-bar">
+  NEE (µg/kg/min) = NE + Epi + (0.01×Dopa) + (0.06×Phenyl) + (2.5×Vaso) + (0.0025×AngII) + (10×Terli) + (0.2×MethBlue) + (0.125×Metar) + (0.02×HydroxyB12) + (0.4×Mido)
+</div>
+
+<div class="badge-wrap">
+  <span class="badge">🔒 All 11 Agents · Multi-Agent Support · MAP/NEE Ratio</span>
+</div>
+
+<button class="reset-btn" id="resetBtn">↺ Reset All</button>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 1: SINGLE-AGENT CONVERTER
+════════════════════════════════════════════════ -->
+<div class="section-divider purple">🔬 Single-Agent → Norepinephrine Equivalent</div>
+
+<div class="converter-section">
+  <div class="converter-header">💊 Select any vasopressor → See the norepinephrine equivalent dose</div>
+  <div class="converter-body">
+    <div class="converter-grid">
+
+      <!-- INPUT SIDE -->
+      <div class="converter-panel input-side">
+        <div class="converter-panel-header">💊 Input Agent</div>
+        <div class="converter-panel-body">
+          <div class="select-group">
+            <label for="convAgent">Vasopressor Agent</label>
+            <select id="convAgent"><option value="">-- Choose Agent --</option></select>
+          </div>
+          <div class="select-group">
+            <label for="convDose">Current Dose</label>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="number" id="convDose" class="agent-input" placeholder="0" min="0" step="any" style="flex:1;">
+              <span class="agent-unit" id="convUnit">—</span>
+            </div>
+          </div>
+          <div class="conv-bd" id="convBdInput">
+            <div class="empty-state">Select an agent and enter a dose.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARROW -->
+      <div class="converter-arrow">→</div>
+
+      <!-- OUTPUT SIDE -->
+      <div class="converter-panel output-side">
+        <div class="converter-panel-header">💉 Norepinephrine Equivalent</div>
+        <div class="converter-panel-body">
+          <div class="converter-result-box">
+            <div class="converter-result-label">Equivalent Norepinephrine Dose</div>
+            <div class="converter-result-value" id="convNeeValue">—</div>
+            <div class="converter-result-unit">µg/kg/min</div>
+          </div>
+          <div class="conv-bd" id="convBdOutput">
+            <div class="empty-state">Norepinephrine equivalent will appear here.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="conv-explain" id="convExplain"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2: MULTI-AGENT NEE CALCULATOR
+════════════════════════════════════════════════ -->
+<div class="section-divider navy">🧮 Multi-Agent NEE Calculator</div>
+
+<div class="calc-section">
+  <div class="calc-header">
+    🧮 Total NEE from Multiple Vasopressors
+    <span style="font-size:10px;font-weight:normal;opacity:0.8;">Enter one or more active agents</span>
+  </div>
+  <div class="calc-body">
+    <div class="map-row">
+      <label for="mapInput">MAP:</label>
+      <input type="number" id="mapInput" class="map-input" placeholder="65" min="0" max="300" step="1">
+      <span class="map-unit">mmHg</span>
+      <span class="map-result" id="mapNeeRatio">MAP/NEE: —</span>
+    </div>
+    <div class="agent-grid" id="agentGrid"></div>
+    <div class="nee-result">
+      <div class="nee-result-label">Total Norepinephrine Equivalence</div>
+      <div class="nee-result-value" id="neeValue">0.000</div>
+      <div class="nee-result-unit">µg/kg/min</div>
+      <div class="severity-bar">
+        <span class="severity-pill sev-none active">No Pressors</span>
+        <span class="severity-pill sev-low">Low (≤0.1)</span>
+        <span class="severity-pill sev-mod">Moderate (0.1–0.3)</span>
+        <span class="severity-pill sev-high">High (0.3–1.0)</span>
+        <span class="severity-pill sev-extreme">Extreme (&gt;1.0)</span>
+      </div>
+      <div class="nee-result-sub" id="neeSubtext">Enter vasopressor doses above. Active agents: 0</div>
+    </div>
+  </div>
+</div>
+
+<!-- Breakdown Table -->
+<div class="breakdown-section" id="breakdownSection" style="display:none;">
+  <div class="breakdown-header">📊 NEE Contribution Breakdown</div>
+  <div class="breakdown-body">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+      <table class="breakdown-table" id="breakdownTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     LEGEND
+════════════════════════════════════════════════ -->
+<div class="legend-section">
+  <div class="legend-header">📖 All 11 Agents — Conversion Factors</div>
+  <div class="legend-grid" id="legendGrid"></div>
+</div>
+
+<div class="footnote">
+  Kotani Y, Di Gioia A, Landoni G, Belletti A, Khanna AK. <em>An updated "norepinephrine equivalent" score
+  in intensive care as a marker of shock severity.</em> Critical Care (2023) 27:29; Correction: Critical Care (2025) 29:104.<br>
+  For educational use only.
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  VASOPRESSOR AGENT DATA
+//  Based on Kotani et al. Critical Care (2023) 27:29 [1]
+//  With correction: Critical Care (2025) 29:104 [2]
+//  All conversion factors verified against corrected Table 1
+// ═══════════════════════════════════════════════════════════
+const AGENTS = [
+  {
+    key: "norepinephrine", name: "Norepinephrine", alias: "Levophed",
+    factor: 1, unit: "µg/kg/min", category: "Catecholamine",
+    mechanism: "α1 >> β1 agonist",
+    receptors: "α1, α2, β1",
+    indication: "First-line vasopressor for septic shock",
+    evidence: "Reference standard — conversion factor = 1",
+    evidenceQuality: "Reference",
+    sourceStudies: "Recommended as first-line since SSC 2004 guidelines",
+    notes: "First-line vasopressor per Surviving Sepsis Campaign 2021. All other agents converted relative to norepinephrine."
+  },
+  {
+    key: "epinephrine", name: "Epinephrine", alias: "Adrenaline",
+    factor: 1, unit: "µg/kg/min", category: "Catecholamine",
+    mechanism: "α1, β1, β2 agonist",
+    receptors: "α1, α2, β1, β2",
+    indication: "Second-line in septic shock; anaphylaxis",
+    evidence: "Two RCTs found that the dose necessary to achieve the same MAP target was similar between epinephrine and norepinephrine",
+    evidenceQuality: "High (2 RCTs)",
+    sourceStudies: "Myburgh ICM 2008; Annane Lancet 2007",
+    notes: "Equipotent with norepinephrine for MAP targets. Additional β2 effects may increase lactate and heart rate."
+  },
+  {
+    key: "dopamine", name: "Dopamine", alias: "Intropin",
+    factor: 0.01, unit: "µg/kg/min", category: "Catecholamine",
+    mechanism: "Dose-dependent: DA → β1 → α1",
+    receptors: "DA1, DA2, β1, α1",
+    indication: "Alternative vasopressor (with bradycardia)",
+    evidence: "SOAP II trial demonstrated the potency of dopamine is 1/100 times that of norepinephrine. Earlier trials showed 80–140× dose ratios.",
+    evidenceQuality: "High (large RCT)",
+    sourceStudies: "De Backer NEJM 2010 (SOAP II); Marik JAMA 1994; De Backer CCM 2003",
+    notes: "100× the dose of NE needed for same MAP. More arrhythmias per SOAP II. Dose-dependent receptor profile."
+  },
+  {
+    key: "phenylephrine", name: "Phenylephrine", alias: "Neosynephrine",
+    factor: 0.06, unit: "µg/kg/min", category: "Catecholamine derivative",
+    mechanism: "Pure α1 agonist",
+    receptors: "α1",
+    indication: "Vasopressor when tachyarrhythmia limits other agents",
+    evidence: "3.2 µg/kg/min of phenylephrine was equipotent to 0.2 µg/kg/min NE in septic shock; 39.1 µg/min phenylephrine ≈ 2.4 µg/min NE under spinal anesthesia",
+    evidenceQuality: "Moderate (2 studies)",
+    sourceStudies: "Reinelt CCM 1999; Ngan Kee Anesthesiology 2015",
+    notes: "Pure vasoconstrictor without inotropic effect. May decrease cardiac output."
+  },
+  {
+    key: "vasopressin", name: "Vasopressin", alias: "ADH / Pitressin",
+    factor: 2.5, unit: "U/min", category: "Non-catecholamine",
+    mechanism: "V1a receptor agonist",
+    receptors: "V1a, V1b, V2",
+    indication: "Second-line vasopressor in septic shock",
+    evidence: "VASST: 0.03 U/min corresponded to 7.5 µg/min NE. VANISH: 0.06 U/min reduced NE by 0.15 µg/kg/min. Conversion ratio of 2.5 is reasonable.",
+    evidenceQuality: "High (2 large RCTs)",
+    sourceStudies: "Russell NEJM 2008 (VASST); Gordon JAMA 2016 (VANISH)",
+    notes: "Addresses relative vasopressin deficiency in septic shock. SSC 2021 recommends as second-line adjunct."
+  },
+  {
+    key: "angiotensin_ii", name: "Angiotensin II", alias: "Giapreza",
+    factor: 0.0025, unit: "ng/kg/min", category: "Non-catecholamine",
+    mechanism: "AT1 receptor agonist",
+    receptors: "AT1",
+    indication: "Refractory vasodilatory shock",
+    evidence: "ATHOS-3: 20 ng/kg/min of angiotensin II infusion resulted in a mean decrease of 0.05 µg/kg/min NE vs placebo to maintain target MAP",
+    evidenceQuality: "Moderate (1 multicenter RCT)",
+    sourceStudies: "Khanna NEJM 2017 (ATHOS-3)",
+    notes: "Activates RAAS. Unit is ng/kg/min (not µg). Kotani used ATHOS-3 over earlier pilot trial for better estimate."
+  },
+  {
+    key: "terlipressin", name: "Terlipressin", alias: "Glypressin",
+    factor: 10, unit: "µg/kg/min", category: "Non-catecholamine",
+    mechanism: "V1a agonist (vasopressin analog)",
+    receptors: "V1a (selective)",
+    indication: "Septic shock (alternative to vasopressin)",
+    evidence: "The dose of terlipressin required to reach the MAP target was ten times lower than the norepinephrine dose",
+    evidenceQuality: "Moderate (1 multicenter RCT)",
+    sourceStudies: "Liu ICM 2018",
+    notes: "Synthetic vasopressin analog with longer half-life and greater V1a selectivity."
+  },
+  {
+    key: "methylene_blue", name: "Methylene Blue", alias: "Methylthioninium",
+    factor: 0.2, unit: "mg/kg/h", category: "Adjunct",
+    mechanism: "NO synthase / guanylate cyclase inhibitor",
+    receptors: "Inhibits NO/cGMP pathway",
+    indication: "Refractory vasoplegia",
+    evidence: "Methylene blue infusion ranged from 0.25–2 mg/kg/h in single-center RCT. No RCT directly comparing potency with NE — factor 0.2 assigned arbitrarily.",
+    evidenceQuality: "Low (1 small RCT, arbitrary factor)",
+    sourceStudies: "Kirov CCM 2001",
+    notes: "Inhibits NO-mediated vasodilation. Conversion factor is arbitrary — interpret with caution."
+  },
+  {
+    key: "metaraminol", name: "Metaraminol", alias: "Aramine",
+    factor: 0.125, unit: "µg/kg/min", category: "Catecholamine derivative",
+    mechanism: "α1 agonist + indirect sympathomimetic",
+    receptors: "α1, β1 (indirect NE release)",
+    indication: "Vasopressor (common in Australia/UK)",
+    evidence: "2.5 µg/kg/min of metaraminol corresponded to 0.3 µg/kg/min of norepinephrine, giving a correction factor of 1/8",
+    evidenceQuality: "Moderate (1 RCT)",
+    sourceStudies: "Natalini ICM 2005",
+    notes: "Direct α1 agonism plus indirect NE release from nerve terminals. Common in perioperative and Australasian ICU settings. Correction factor confirmed as 1/8 (0.125) per 2025 correction."
+  },
+  {
+    key: "hydroxocobalamin", name: "Hydroxocobalamin", alias: "Vitamin B12a / Cyanokit",
+    factor: 0.02, unit: "g (bolus)", category: "Adjunct",
+    mechanism: "Nitric oxide scavenger",
+    receptors: "Binds NO directly",
+    indication: "Refractory vasoplegia / cyanide poisoning",
+    evidence: "5 g of hydroxocobalamin reduced norepinephrine by 0.08 µg/kg/min, giving a correction factor of 0.02",
+    evidenceQuality: "Low (1 pilot RCT)",
+    sourceStudies: "Patel Chest 2022 (IV-HOCSS)",
+    notes: "Scavenges NO. Bolus dosing — not continuous infusion. Single pilot trial evidence."
+  },
+  {
+    key: "midodrine", name: "Midodrine", alias: "ProAmatine",
+    factor: 0.4, unit: "µg/kg/min", category: "Adjunct (oral)",
+    mechanism: "α1 agonist (prodrug → desglymidodrine)",
+    receptors: "α1",
+    indication: "Vasopressor weaning / transition to oral",
+    evidence: "30 mg/day of midodrine reduced 73 mg of norepinephrine during six days in septic shock, giving a correction factor of 0.4",
+    evidenceQuality: "Low (1 RCT)",
+    sourceStudies: "Adly Ir J Med Sci 2022",
+    notes: "Oral vasopressor prodrug. Facilitates vasopressor weaning. Approximate conversion due to oral bioavailability."
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+//  ENGINE
+// ═══════════════════════════════════════════════════════════
+
+function getAgent(key) { return AGENTS.find(a => a.key === key) || null; }
+
+// ── BUILD CALCULATOR AGENT CARDS ──
+function buildAgentGrid() {
+  const grid = document.getElementById('agentGrid');
+  let html = '';
+  AGENTS.forEach(a => {
+    const fd = a.factor === 1 ? '×1 (ref)' : `×${a.factor}`;
+    html += `<div class="agent-card" id="card_${a.key}">
+      <div class="agent-card-header">
+        <span>${a.name}</span>
+        <span class="agent-factor">${fd} · ${a.unit}</span>
+      </div>
+      <div class="agent-card-body">
+        <div class="agent-input-row">
+          <input type="number" class="agent-input" id="dose_${a.key}"
+            placeholder="0" min="0" step="any" data-key="${a.key}">
+          <span class="agent-unit">${a.unit}</span>
+        </div>
+        <div class="agent-nee" id="nee_${a.key}">NEE: 0.000</div>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+// ── BUILD LEGEND ──
+function buildLegend() {
+  const grid = document.getElementById('legendGrid');
+  let html = '';
+  AGENTS.forEach(a => {
+    const fs = a.factor === 0.01 ? '1/100' : a.factor === 0.125 ? '1/8' : String(a.factor);
+    html += `<div class="legend-card">
+      <div class="legend-code">${fs}</div>
+      <div class="legend-name">${a.name}</div>
+      <div class="legend-desc">${a.unit} · ${a.category}</div>
+      <div class="legend-evidence">${a.evidenceQuality}</div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+// ── BUILD CONVERTER SELECT ──
+function buildConverterSelect() {
+  const sel = document.getElementById('convAgent');
+  AGENTS.forEach(a => {
+    if (a.key === 'norepinephrine') return;
+    const opt = document.createElement('option');
+    opt.value = a.key;
+    opt.textContent = `${a.name} (${a.alias}) — ${a.unit}`;
+    sel.appendChild(opt);
+  });
+}
+
+// ── SINGLE-AGENT CONVERTER ──
+function updateConverter() {
+  const aKey  = document.getElementById('convAgent').value;
+  const agent = getAgent(aKey);
+  const dose  = parseFloat(document.getElementById('convDose').value) || 0;
+
+  document.getElementById('convUnit').textContent = agent ? agent.unit : '—';
+
+  if (agent && dose > 0) {
+    const nee = dose * agent.factor;
+    document.getElementById('convNeeValue').textContent = nee.toFixed(4);
+
+    const inputRows = [
+      { key: 'Agent',       val: agent.name },
+      { key: 'Alias',       val: agent.alias },
+      { key: 'Category',    val: agent.category },
+      { key: 'Mechanism',   val: agent.mechanism },
+      { key: 'Receptors',   val: agent.receptors },
+      { key: 'Dose',        val: `${dose} ${agent.unit}`, mono: true },
+      { key: 'Factor',      val: `×${agent.factor}`, mono: true },
+      { key: 'Evidence',    val: agent.evidenceQuality },
+    ];
+    let ih = '';
+    inputRows.forEach(r => {
+      ih += `<div class="conv-bd-row">
+        <div class="conv-bd-key">${r.key}</div>
+        <div class="conv-bd-val ${r.mono?'mono':''}">${r.val}</div>
+      </div>`;
+    });
+    document.getElementById('convBdInput').innerHTML = ih;
+
+    const outputRows = [
+      { key: 'Agent',       val: 'Norepinephrine' },
+      { key: 'Alias',       val: 'Levophed' },
+      { key: 'Equiv. Dose', val: `${nee.toFixed(4)} µg/kg/min`, mono: true },
+      { key: 'Calculation', val: `${dose} × ${agent.factor} = ${nee.toFixed(4)}`, mono: true },
+    ];
+    let oh = '';
+    outputRows.forEach(r => {
+      oh += `<div class="conv-bd-row">
+        <div class="conv-bd-key ne">${r.key}</div>
+        <div class="conv-bd-val ${r.mono?'mono':''}">${r.val}</div>
+      </div>`;
+    });
+    document.getElementById('convBdOutput').innerHTML = oh;
+
+    const ex = document.getElementById('convExplain');
+    ex.className = 'conv-explain show';
+    ex.innerHTML = `
+      <strong>💊 ${agent.name} → 💉 Norepinephrine Conversion</strong><br><br>
+      <strong>Formula:</strong> <code>${dose} ${agent.unit} × ${agent.factor} = ${nee.toFixed(4)} µg/kg/min NE</code><br><br>
+      <strong>Evidence Basis:</strong> ${agent.evidence}<br>
+      <strong>Source Studies:</strong> ${agent.sourceStudies}<br><br>
+      <strong>Clinical Notes:</strong> ${agent.notes}<br><br>
+      <em style="font-size:10px;color:#888;">This means <strong>${dose} ${agent.unit}</strong> of ${agent.name} produces
+      roughly the same vasoconstrictive effect as <strong>${nee.toFixed(4)} µg/kg/min</strong> of norepinephrine.</em>`;
+  } else {
+    document.getElementById('convNeeValue').textContent = '—';
+    document.getElementById('convBdInput').innerHTML = '<div class="empty-state">Select an agent and enter a dose.</div>';
+    document.getElementById('convBdOutput').innerHTML = '<div class="empty-state">Norepinephrine equivalent will appear here.</div>';
+    const ex = document.getElementById('convExplain');
+    ex.className = 'conv-explain'; ex.innerHTML = '';
+  }
+}
+
+// ── MULTI-AGENT CALCULATOR ──
+function calculateNEE() {
+  let total = 0, activeCount = 0;
+  const contributions = [];
+
+  AGENTS.forEach(a => {
+    const input = document.getElementById('dose_' + a.key);
+    const card  = document.getElementById('card_' + a.key);
+    const label = document.getElementById('nee_' + a.key);
+    const dose  = parseFloat(input.value) || 0;
+    const nee   = dose * a.factor;
+
+    if (dose > 0) {
+      activeCount++;
+      card.classList.add('active');
+      contributions.push({ agent: a, dose, nee });
+    } else {
+      card.classList.remove('active');
+    }
+    label.textContent = `NEE: ${nee.toFixed(4)}`;
+    total += nee;
+  });
+
+  document.getElementById('neeValue').textContent = total.toFixed(4);
+  updateSeverity(total, activeCount);
+  updateMapRatio(total);
+
+  const names = contributions.map(c => c.agent.name).join(' + ');
+  document.getElementById('neeSubtext').textContent = activeCount === 0
+    ? 'Enter vasopressor doses above. Active agents: 0'
+    : `Active agents (${activeCount}): ${names}`;
+
+  updateBreakdown(contributions, total);
+}
+
+function updateSeverity(total, activeCount) {
+  const pills = document.querySelectorAll('.severity-pill');
+  pills.forEach(p => p.classList.remove('active'));
+  let idx;
+  if (activeCount === 0 || total === 0) idx = 0;
+  else if (total <= 0.1)  idx = 1;
+  else if (total <= 0.3)  idx = 2;
+  else if (total <= 1.0)  idx = 3;
+  else                     idx = 4;
+  pills[idx].classList.add('active');
+}
+
+function updateMapRatio(total) {
+  const mapVal  = parseFloat(document.getElementById('mapInput').value) || 0;
+  const display = document.getElementById('mapNeeRatio');
+  if (mapVal > 0 && total > 0) {
+    const ratio = mapVal / total;
+    display.textContent = `MAP/NEE: ${ratio.toFixed(0)}`;
+    display.style.color = ratio >= 300 ? '#006633' : (ratio >= 150 ? '#cc6600' : '#cc0000');
+  } else {
+    display.textContent = 'MAP/NEE: —';
+    display.style.color = '#003366';
+  }
+}
+
+function updateBreakdown(contributions, total) {
+  const section = document.getElementById('breakdownSection');
+  const table   = document.getElementById('breakdownTable');
+
+  if (contributions.length === 0) { section.style.display = 'none'; return; }
+
+  section.style.display = 'block';
+  contributions.sort((a, b) => b.nee - a.nee);
+
+  let html = `<tr>
+    <th>Agent</th><th>Dose</th><th>Unit</th>
+    <th>Factor</th><th>NEE (µg/kg/min)</th>
+    <th>% of Total</th><th>Contribution</th>
+  </tr>`;
+
+  contributions.forEach(c => {
+    const pct = total > 0 ? (c.nee / total * 100) : 0;
+    const bw  = Math.max(2, Math.min(100, pct));
+    html += `<tr class="active-row">
+      <td><strong>${c.agent.name}</strong><br><span style="font-size:9px;color:#888;">${c.agent.alias}</span></td>
+      <td class="mono">${c.dose}</td>
+      <td>${c.agent.unit}</td>
+      <td class="mono">×${c.agent.factor}</td>
+      <td class="mono">${c.nee.toFixed(4)}</td>
+      <td class="mono">${pct.toFixed(1)}%</td>
+      <td class="contribution-bar-cell"><div class="contribution-bar" style="width:${bw}%"></div></td>
+    </tr>`;
+  });
+
+  html += `<tr style="border-top:2px solid #006633;">
+    <td colspan="4"><strong>TOTAL NEE</strong></td>
+    <td class="mono"><strong>${total.toFixed(4)}</strong></td>
+    <td class="mono"><strong>100%</strong></td><td></td>
+  </tr>`;
+
+  table.innerHTML = html;
+}
+
+// ── RESET ──
+function resetAll() {
+  AGENTS.forEach(a => {
+    document.getElementById('dose_' + a.key).value = '';
+    document.getElementById('nee_' + a.key).textContent = 'NEE: 0.000';
+    document.getElementById('card_' + a.key).classList.remove('active');
+  });
+  document.getElementById('mapInput').value = '';
+  document.getElementById('neeValue').textContent = '0.000';
+  document.getElementById('neeSubtext').textContent = 'Enter vasopressor doses above. Active agents: 0';
+  document.getElementById('mapNeeRatio').textContent = 'MAP/NEE: —';
+  document.getElementById('mapNeeRatio').style.color = '#003366';
+  document.getElementById('breakdownSection').style.display = 'none';
+  const pills = document.querySelectorAll('.severity-pill');
+  pills.forEach(p => p.classList.remove('active'));
+  pills[0].classList.add('active');
+
+  document.getElementById('convAgent').value = '';
+  document.getElementById('convDose').value = '';
+  document.getElementById('convUnit').textContent = '—';
+  document.getElementById('convNeeValue').textContent = '—';
+  document.getElementById('convBdInput').innerHTML = '<div class="empty-state">Select an agent and enter a dose.</div>';
+  document.getElementById('convBdOutput').innerHTML = '<div class="empty-state">Norepinephrine equivalent will appear here.</div>';
+  document.getElementById('convExplain').className = 'conv-explain';
+  document.getElementById('convExplain').innerHTML = '';
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', function() {
+  buildAgentGrid();
+  buildLegend();
+  buildConverterSelect();
+
+  document.getElementById('convAgent').addEventListener('change', updateConverter);
+  document.getElementById('convDose').addEventListener('input', updateConverter);
+
+  document.getElementById('agentGrid').addEventListener('input', function(e) {
+    if (e.target.classList.contains('agent-input')) calculateNEE();
+  });
+  document.getElementById('mapInput').addEventListener('input', function() {
+    const total = AGENTS.reduce((sum, a) => {
+      return sum + (parseFloat(document.getElementById('dose_' + a.key).value) || 0) * a.factor;
+    }, 0);
+    updateMapRatio(total);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', resetAll);
+});
+</script>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
