@@ -1,19 +1,4 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-							<style>
-								body {
-									background-color: white; /* Ensure the iframe has a white background */
-								}
-
-								
-							</style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -42,6 +27,7 @@
       font-size: 11px; font-weight: bold; background: #e8f4e8;
       border: 1.5px solid #006633; color: #006633;
       border-radius: 20px; padding: 5px 18px; display: inline-block;
+      margin: 2px;
     }
     .reset-btn {
       display: block; margin: 0 auto 14px auto; padding: 12px 28px;
@@ -58,6 +44,28 @@
     }
     .section-divider.purple { color: #8833cc; border-bottom: 2px solid #8833cc; }
     .section-divider.navy   { color: #003366; border-bottom: 2px solid #003366; }
+
+    /* ── PATIENT BAR ── */
+    .patient-bar {
+      display: flex; align-items: center; gap: 10px;
+      background: #fff; border: 2px solid #003366;
+      border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .patient-bar label { font-size: 12px; font-weight: bold; color: #003366; }
+    .patient-input {
+      width: 80px; padding: 10px; border: 2px solid #003366;
+      border-radius: 8px; font-size: 16px; text-align: center;
+      min-height: 48px; -webkit-appearance: none;
+    }
+    .patient-input:focus { outline: none; border-color: #0066cc; }
+    .patient-unit { font-size: 11px; color: #666; }
+    .weight-warning {
+      display: none; font-size: 10px; color: #cc0000; font-weight: bold;
+      background: #fff0f0; border: 1px solid #cc0000; border-radius: 4px;
+      padding: 4px 8px; margin-left: auto;
+    }
+    .weight-warning.show { display: block; }
 
     /* ── SINGLE-AGENT CONVERTER ── */
     .converter-section {
@@ -125,6 +133,24 @@
     }
     .conv-explain.show { background: #f8f0ff; border: 2px solid #8833cc; }
 
+    /* ── UNIT TOGGLE ── */
+    .unit-toggle {
+      display: flex; border-radius: 6px; overflow: hidden; border: 2px solid #8833cc;
+      margin-bottom: 8px;
+    }
+    .unit-toggle-btn {
+      flex: 1; padding: 10px 8px; font-size: 11px; font-weight: bold;
+      text-align: center; cursor: pointer; border: none;
+      background: #f8f8f8; color: #8833cc;
+      min-height: 44px;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s;
+    }
+    .unit-toggle-btn.active {
+      background: #8833cc; color: #fff;
+    }
+    .unit-toggle-btn:first-child { border-right: 1px solid #8833cc; }
+
     /* ── CALCULATOR SECTION ── */
     .calc-section {
       background: #fff; border-radius: 8px; border: 2px solid #003366;
@@ -163,6 +189,8 @@
     }
     .agent-card.active { border-color: #006633; background: #f0fff4; }
     .agent-card.active .agent-card-header { background: #006633; }
+    .agent-card.needs-weight { border-color: #cc6600; }
+    .agent-card.needs-weight .agent-card-header { background: #cc6600; }
     .agent-card-header {
       background: #888; color: #fff; padding: 6px 10px;
       font-size: 11px; font-weight: bold;
@@ -180,6 +208,27 @@
     .agent-input:focus { outline: none; border-color: #006633; }
     .agent-unit { font-size: 9px; color: #888; min-width: 70px; text-align: right; }
     .agent-nee { font-family: monospace; font-size: 11px; color: #006633; font-weight: bold; margin-top: 4px; text-align: right; }
+
+    /* ── UNIT TOGGLE (CALC CARDS) ── */
+    .card-unit-toggle {
+      display: flex; border-radius: 4px; overflow: hidden;
+      border: 1.5px solid #006633; margin-bottom: 6px;
+    }
+    .card-unit-btn {
+      flex: 1; padding: 6px 4px; font-size: 9px; font-weight: bold;
+      text-align: center; cursor: pointer; border: none;
+      background: #f8f8f8; color: #006633;
+      min-height: 32px;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s;
+    }
+    .card-unit-btn.active { background: #006633; color: #fff; }
+    .card-unit-btn:first-child { border-right: 1px solid #006633; }
+    .card-weight-note {
+      font-size: 9px; color: #cc6600; font-style: italic;
+      text-align: center; margin-top: 4px; display: none;
+    }
+    .card-weight-note.show { display: block; }
 
     .nee-result {
       background: #003366; border-radius: 8px; padding: 16px;
@@ -214,7 +263,7 @@
       font-size: 13px; font-weight: bold;
     }
     .breakdown-body { padding: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .breakdown-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 500px; }
+    .breakdown-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 560px; }
     .breakdown-table th { background: #006633; color: #fff; padding: 6px 10px; text-align: left; }
     .breakdown-table td { padding: 6px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
     .breakdown-table tr:nth-child(even) td { background: #f0fff4; }
@@ -225,7 +274,6 @@
       min-width: 2px; transition: width 0.3s;
     }
 
-    /* ── LEGEND ── */
     .legend-section { background: #fff; border-radius: 8px; border: 2px solid #555; margin-top: 14px; overflow: hidden; }
     .legend-header  { background: #555; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: bold; }
     .legend-grid    { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; padding: 10px; }
@@ -274,6 +322,17 @@
 
 <div class="badge-wrap">
   <span class="badge">🔒 All 11 Agents · Multi-Agent Support · MAP/NEE Ratio</span>
+  <span class="badge">⚖️ Weight-Based Conversion · Supports mcg/min Input</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PATIENT BAR — WEIGHT INPUT
+════════════════════════════════════════════════ -->
+<div class="patient-bar">
+  <label for="weightInput">⚖️ Patient Weight:</label>
+  <input type="number" id="weightInput" class="patient-input" placeholder="70" min="1" max="500" step="0.1">
+  <span class="patient-unit">kg</span>
+  <span class="weight-warning" id="weightWarning">⚠️ Weight required for mcg/min → mcg/kg/min conversion</span>
 </div>
 
 <button class="reset-btn" id="resetBtn">↺ Reset All</button>
@@ -295,6 +354,11 @@
           <div class="select-group">
             <label for="convAgent">Vasopressor Agent</label>
             <select id="convAgent"><option value="">-- Choose Agent --</option></select>
+          </div>
+          <!-- Unit toggle for converter -->
+          <div class="unit-toggle" id="convUnitToggle" style="display:none;">
+            <button class="unit-toggle-btn active" data-unit="weight">µg/kg/min</button>
+            <button class="unit-toggle-btn" data-unit="flat">mcg/min</button>
           </div>
           <div class="select-group">
             <label for="convDose">Current Dose</label>
@@ -366,7 +430,6 @@
   </div>
 </div>
 
-<!-- Breakdown Table -->
 <div class="breakdown-section" id="breakdownSection" style="display:none;">
   <div class="breakdown-header">📊 NEE Contribution Breakdown</div>
   <div class="breakdown-body">
@@ -376,9 +439,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     LEGEND
-════════════════════════════════════════════════ -->
+<!-- LEGEND -->
 <div class="legend-section">
   <div class="legend-header">📖 All 11 Agents — Conversion Factors</div>
   <div class="legend-grid" id="legendGrid"></div>
@@ -393,16 +454,18 @@
 <script>
 // ═══════════════════════════════════════════════════════════
 //  VASOPRESSOR AGENT DATA
-//  Based on Kotani et al. Critical Care (2023) 27:29 [1]
-//  With correction: Critical Care (2025) 29:104 [2]
-//  All conversion factors verified against corrected Table 1
+//  Kotani et al. Critical Care (2023) 27:29 [1]
+//  Correction: Critical Care (2025) 29:104 [2]
 // ═══════════════════════════════════════════════════════════
+
+// Agents that support mcg/min (flat-rate) input in US practice
+const FLAT_RATE_AGENTS = ['norepinephrine', 'epinephrine', 'phenylephrine'];
+
 const AGENTS = [
   {
     key: "norepinephrine", name: "Norepinephrine", alias: "Levophed",
-    factor: 1, unit: "µg/kg/min", category: "Catecholamine",
-    mechanism: "α1 >> β1 agonist",
-    receptors: "α1, α2, β1",
+    factor: 1, unit: "µg/kg/min", flatUnit: "mcg/min", category: "Catecholamine",
+    mechanism: "α1 >> β1 agonist", receptors: "α1, α2, β1",
     indication: "First-line vasopressor for septic shock",
     evidence: "Reference standard — conversion factor = 1",
     evidenceQuality: "Reference",
@@ -411,9 +474,8 @@ const AGENTS = [
   },
   {
     key: "epinephrine", name: "Epinephrine", alias: "Adrenaline",
-    factor: 1, unit: "µg/kg/min", category: "Catecholamine",
-    mechanism: "α1, β1, β2 agonist",
-    receptors: "α1, α2, β1, β2",
+    factor: 1, unit: "µg/kg/min", flatUnit: "mcg/min", category: "Catecholamine",
+    mechanism: "α1, β1, β2 agonist", receptors: "α1, α2, β1, β2",
     indication: "Second-line in septic shock; anaphylaxis",
     evidence: "Two RCTs found that the dose necessary to achieve the same MAP target was similar between epinephrine and norepinephrine",
     evidenceQuality: "High (2 RCTs)",
@@ -423,19 +485,17 @@ const AGENTS = [
   {
     key: "dopamine", name: "Dopamine", alias: "Intropin",
     factor: 0.01, unit: "µg/kg/min", category: "Catecholamine",
-    mechanism: "Dose-dependent: DA → β1 → α1",
-    receptors: "DA1, DA2, β1, α1",
+    mechanism: "Dose-dependent: DA → β1 → α1", receptors: "DA1, DA2, β1, α1",
     indication: "Alternative vasopressor (with bradycardia)",
-    evidence: "SOAP II trial demonstrated the potency of dopamine is 1/100 times that of norepinephrine. Earlier trials showed 80–140× dose ratios.",
+    evidence: "SOAP II trial demonstrated the potency of dopamine is 1/100 times that of norepinephrine",
     evidenceQuality: "High (large RCT)",
     sourceStudies: "De Backer NEJM 2010 (SOAP II); Marik JAMA 1994; De Backer CCM 2003",
     notes: "100× the dose of NE needed for same MAP. More arrhythmias per SOAP II. Dose-dependent receptor profile."
   },
   {
     key: "phenylephrine", name: "Phenylephrine", alias: "Neosynephrine",
-    factor: 0.06, unit: "µg/kg/min", category: "Catecholamine derivative",
-    mechanism: "Pure α1 agonist",
-    receptors: "α1",
+    factor: 0.06, unit: "µg/kg/min", flatUnit: "mcg/min", category: "Catecholamine derivative",
+    mechanism: "Pure α1 agonist", receptors: "α1",
     indication: "Vasopressor when tachyarrhythmia limits other agents",
     evidence: "3.2 µg/kg/min of phenylephrine was equipotent to 0.2 µg/kg/min NE in septic shock; 39.1 µg/min phenylephrine ≈ 2.4 µg/min NE under spinal anesthesia",
     evidenceQuality: "Moderate (2 studies)",
@@ -445,10 +505,9 @@ const AGENTS = [
   {
     key: "vasopressin", name: "Vasopressin", alias: "ADH / Pitressin",
     factor: 2.5, unit: "U/min", category: "Non-catecholamine",
-    mechanism: "V1a receptor agonist",
-    receptors: "V1a, V1b, V2",
+    mechanism: "V1a receptor agonist", receptors: "V1a, V1b, V2",
     indication: "Second-line vasopressor in septic shock",
-    evidence: "VASST: 0.03 U/min corresponded to 7.5 µg/min NE. VANISH: 0.06 U/min reduced NE by 0.15 µg/kg/min. Conversion ratio of 2.5 is reasonable.",
+    evidence: "VASST: 0.03 U/min corresponded to 7.5 µg/min NE. VANISH: 0.06 U/min reduced NE by 0.15 µg/kg/min",
     evidenceQuality: "High (2 large RCTs)",
     sourceStudies: "Russell NEJM 2008 (VASST); Gordon JAMA 2016 (VANISH)",
     notes: "Addresses relative vasopressin deficiency in septic shock. SSC 2021 recommends as second-line adjunct."
@@ -456,19 +515,17 @@ const AGENTS = [
   {
     key: "angiotensin_ii", name: "Angiotensin II", alias: "Giapreza",
     factor: 0.0025, unit: "ng/kg/min", category: "Non-catecholamine",
-    mechanism: "AT1 receptor agonist",
-    receptors: "AT1",
+    mechanism: "AT1 receptor agonist", receptors: "AT1",
     indication: "Refractory vasodilatory shock",
-    evidence: "ATHOS-3: 20 ng/kg/min of angiotensin II infusion resulted in a mean decrease of 0.05 µg/kg/min NE vs placebo to maintain target MAP",
+    evidence: "ATHOS-3: 20 ng/kg/min of angiotensin II resulted in a mean decrease of 0.05 µg/kg/min NE vs placebo",
     evidenceQuality: "Moderate (1 multicenter RCT)",
     sourceStudies: "Khanna NEJM 2017 (ATHOS-3)",
-    notes: "Activates RAAS. Unit is ng/kg/min (not µg). Kotani used ATHOS-3 over earlier pilot trial for better estimate."
+    notes: "Activates RAAS. Unit is ng/kg/min (not µg)."
   },
   {
     key: "terlipressin", name: "Terlipressin", alias: "Glypressin",
     factor: 10, unit: "µg/kg/min", category: "Non-catecholamine",
-    mechanism: "V1a agonist (vasopressin analog)",
-    receptors: "V1a (selective)",
+    mechanism: "V1a agonist (vasopressin analog)", receptors: "V1a (selective)",
     indication: "Septic shock (alternative to vasopressin)",
     evidence: "The dose of terlipressin required to reach the MAP target was ten times lower than the norepinephrine dose",
     evidenceQuality: "Moderate (1 multicenter RCT)",
@@ -478,10 +535,9 @@ const AGENTS = [
   {
     key: "methylene_blue", name: "Methylene Blue", alias: "Methylthioninium",
     factor: 0.2, unit: "mg/kg/h", category: "Adjunct",
-    mechanism: "NO synthase / guanylate cyclase inhibitor",
-    receptors: "Inhibits NO/cGMP pathway",
+    mechanism: "NO synthase / guanylate cyclase inhibitor", receptors: "Inhibits NO/cGMP pathway",
     indication: "Refractory vasoplegia",
-    evidence: "Methylene blue infusion ranged from 0.25–2 mg/kg/h in single-center RCT. No RCT directly comparing potency with NE — factor 0.2 assigned arbitrarily.",
+    evidence: "Methylene blue infusion ranged from 0.25–2 mg/kg/h. Factor 0.2 assigned arbitrarily.",
     evidenceQuality: "Low (1 small RCT, arbitrary factor)",
     sourceStudies: "Kirov CCM 2001",
     notes: "Inhibits NO-mediated vasodilation. Conversion factor is arbitrary — interpret with caution."
@@ -489,21 +545,19 @@ const AGENTS = [
   {
     key: "metaraminol", name: "Metaraminol", alias: "Aramine",
     factor: 0.125, unit: "µg/kg/min", category: "Catecholamine derivative",
-    mechanism: "α1 agonist + indirect sympathomimetic",
-    receptors: "α1, β1 (indirect NE release)",
+    mechanism: "α1 agonist + indirect sympathomimetic", receptors: "α1, β1 (indirect NE release)",
     indication: "Vasopressor (common in Australia/UK)",
     evidence: "2.5 µg/kg/min of metaraminol corresponded to 0.3 µg/kg/min of norepinephrine, giving a correction factor of 1/8",
     evidenceQuality: "Moderate (1 RCT)",
     sourceStudies: "Natalini ICM 2005",
-    notes: "Direct α1 agonism plus indirect NE release from nerve terminals. Common in perioperative and Australasian ICU settings. Correction factor confirmed as 1/8 (0.125) per 2025 correction."
+    notes: "Direct α1 agonism plus indirect NE release. Correction factor confirmed as 1/8 (0.125) per 2025 correction."
   },
   {
     key: "hydroxocobalamin", name: "Hydroxocobalamin", alias: "Vitamin B12a / Cyanokit",
     factor: 0.02, unit: "g (bolus)", category: "Adjunct",
-    mechanism: "Nitric oxide scavenger",
-    receptors: "Binds NO directly",
+    mechanism: "Nitric oxide scavenger", receptors: "Binds NO directly",
     indication: "Refractory vasoplegia / cyanide poisoning",
-    evidence: "5 g of hydroxocobalamin reduced norepinephrine by 0.08 µg/kg/min, giving a correction factor of 0.02",
+    evidence: "5 g of hydroxocobalamin reduced norepinephrine by 0.08 µg/kg/min",
     evidenceQuality: "Low (1 pilot RCT)",
     sourceStudies: "Patel Chest 2022 (IV-HOCSS)",
     notes: "Scavenges NO. Bolus dosing — not continuous infusion. Single pilot trial evidence."
@@ -511,47 +565,92 @@ const AGENTS = [
   {
     key: "midodrine", name: "Midodrine", alias: "ProAmatine",
     factor: 0.4, unit: "µg/kg/min", category: "Adjunct (oral)",
-    mechanism: "α1 agonist (prodrug → desglymidodrine)",
-    receptors: "α1",
+    mechanism: "α1 agonist (prodrug → desglymidodrine)", receptors: "α1",
     indication: "Vasopressor weaning / transition to oral",
-    evidence: "30 mg/day of midodrine reduced 73 mg of norepinephrine during six days in septic shock, giving a correction factor of 0.4",
+    evidence: "30 mg/day of midodrine reduced 73 mg of norepinephrine during six days",
     evidenceQuality: "Low (1 RCT)",
     sourceStudies: "Adly Ir J Med Sci 2022",
-    notes: "Oral vasopressor prodrug. Facilitates vasopressor weaning. Approximate conversion due to oral bioavailability."
+    notes: "Oral vasopressor prodrug. Facilitates vasopressor weaning. Approximate conversion."
   }
 ];
 
 // ═══════════════════════════════════════════════════════════
-//  ENGINE
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let convUnitMode = 'weight'; // 'weight' = µg/kg/min, 'flat' = mcg/min
+let calcUnitModes = {};      // key → 'weight' or 'flat'
+
+function getWeight() { return parseFloat(document.getElementById('weightInput').value) || 0; }
+function getAgent(key) { return AGENTS.find(a => a.key === key) || null; }
+function isFlatAgent(key) { return FLAT_RATE_AGENTS.includes(key); }
+
+function checkWeightWarning() {
+  const w = getWeight();
+  let needsWeight = false;
+  if (convUnitMode === 'flat') needsWeight = true;
+  AGENTS.forEach(a => {
+    if (calcUnitModes[a.key] === 'flat') {
+      const dose = parseFloat(document.getElementById('dose_' + a.key).value) || 0;
+      if (dose > 0) needsWeight = true;
+    }
+  });
+  const warn = document.getElementById('weightWarning');
+  if (needsWeight && w <= 0) {
+    warn.classList.add('show');
+  } else {
+    warn.classList.remove('show');
+  }
+}
+
+// Convert dose to µg/kg/min for the NEE formula
+function toWeightBased(dose, unitMode, weight) {
+  if (unitMode === 'flat' && weight > 0) return dose / weight;
+  if (unitMode === 'flat' && weight <= 0) return null; // can't convert
+  return dose; // already weight-based
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BUILD UI
 // ═══════════════════════════════════════════════════════════
 
-function getAgent(key) { return AGENTS.find(a => a.key === key) || null; }
-
-// ── BUILD CALCULATOR AGENT CARDS ──
 function buildAgentGrid() {
   const grid = document.getElementById('agentGrid');
   let html = '';
   AGENTS.forEach(a => {
     const fd = a.factor === 1 ? '×1 (ref)' : `×${a.factor}`;
+    const hasFlat = isFlatAgent(a.key);
+    calcUnitModes[a.key] = 'weight'; // default
+
     html += `<div class="agent-card" id="card_${a.key}">
       <div class="agent-card-header">
         <span>${a.name}</span>
         <span class="agent-factor">${fd} · ${a.unit}</span>
       </div>
-      <div class="agent-card-body">
-        <div class="agent-input-row">
+      <div class="agent-card-body">`;
+
+    if (hasFlat) {
+      html += `<div class="card-unit-toggle" id="toggle_${a.key}">
+        <button class="card-unit-btn active" data-key="${a.key}" data-unit="weight">${a.unit}</button>
+        <button class="card-unit-btn" data-key="${a.key}" data-unit="flat">${a.flatUnit}</button>
+      </div>`;
+    }
+
+    html += `<div class="agent-input-row">
           <input type="number" class="agent-input" id="dose_${a.key}"
             placeholder="0" min="0" step="any" data-key="${a.key}">
-          <span class="agent-unit">${a.unit}</span>
+          <span class="agent-unit" id="unit_${a.key}">${a.unit}</span>
         </div>
-        <div class="agent-nee" id="nee_${a.key}">NEE: 0.000</div>
-      </div>
-    </div>`;
+        <div class="agent-nee" id="nee_${a.key}">NEE: 0.000</div>`;
+
+    if (hasFlat) {
+      html += `<div class="card-weight-note" id="wnote_${a.key}">⚠️ Enter patient weight above</div>`;
+    }
+
+    html += `</div></div>`;
   });
   grid.innerHTML = html;
 }
 
-// ── BUILD LEGEND ──
 function buildLegend() {
   const grid = document.getElementById('legendGrid');
   let html = '';
@@ -567,7 +666,6 @@ function buildLegend() {
   grid.innerHTML = html;
 }
 
-// ── BUILD CONVERTER SELECT ──
 function buildConverterSelect() {
   const sel = document.getElementById('convAgent');
   AGENTS.forEach(a => {
@@ -579,17 +677,61 @@ function buildConverterSelect() {
   });
 }
 
-// ── SINGLE-AGENT CONVERTER ──
+// ═══════════════════════════════════════════════════════════
+//  SINGLE-AGENT CONVERTER
+// ═══════════════════════════════════════════════════════════
+
+function updateConverterToggle() {
+  const aKey = document.getElementById('convAgent').value;
+  const toggle = document.getElementById('convUnitToggle');
+  const agent = getAgent(aKey);
+  if (agent && isFlatAgent(aKey)) {
+    toggle.style.display = 'flex';
+    toggle.querySelectorAll('.unit-toggle-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.unit === convUnitMode);
+    });
+    document.getElementById('convUnit').textContent =
+      convUnitMode === 'flat' ? agent.flatUnit : agent.unit;
+  } else {
+    toggle.style.display = 'none';
+    convUnitMode = 'weight';
+    if (agent) document.getElementById('convUnit').textContent = agent.unit;
+  }
+}
+
 function updateConverter() {
   const aKey  = document.getElementById('convAgent').value;
   const agent = getAgent(aKey);
-  const dose  = parseFloat(document.getElementById('convDose').value) || 0;
+  const rawDose = parseFloat(document.getElementById('convDose').value) || 0;
+  const weight  = getWeight();
 
-  document.getElementById('convUnit').textContent = agent ? agent.unit : '—';
+  updateConverterToggle();
+  document.getElementById('convUnit').textContent = agent
+    ? (convUnitMode === 'flat' && agent.flatUnit ? agent.flatUnit : agent.unit)
+    : '—';
 
-  if (agent && dose > 0) {
-    const nee = dose * agent.factor;
+  checkWeightWarning();
+
+  if (agent && rawDose > 0) {
+    const weightBasedDose = toWeightBased(rawDose, convUnitMode, weight);
+
+    if (weightBasedDose === null) {
+      document.getElementById('convNeeValue').textContent = '⚠️ Need Weight';
+      document.getElementById('convBdInput').innerHTML =
+        '<div class="empty-state" style="color:#cc0000;">Enter patient weight to convert mcg/min → µg/kg/min</div>';
+      document.getElementById('convBdOutput').innerHTML =
+        '<div class="empty-state">Waiting for weight...</div>';
+      document.getElementById('convExplain').className = 'conv-explain';
+      document.getElementById('convExplain').innerHTML = '';
+      return;
+    }
+
+    const nee = weightBasedDose * agent.factor;
     document.getElementById('convNeeValue').textContent = nee.toFixed(4);
+
+    const conversionNote = convUnitMode === 'flat'
+      ? `<br><em style="font-size:10px;color:#8833cc;">Converted: ${rawDose} mcg/min ÷ ${weight} kg = ${weightBasedDose.toFixed(4)} µg/kg/min</em>`
+      : '';
 
     const inputRows = [
       { key: 'Agent',       val: agent.name },
@@ -597,10 +739,15 @@ function updateConverter() {
       { key: 'Category',    val: agent.category },
       { key: 'Mechanism',   val: agent.mechanism },
       { key: 'Receptors',   val: agent.receptors },
-      { key: 'Dose',        val: `${dose} ${agent.unit}`, mono: true },
-      { key: 'Factor',      val: `×${agent.factor}`, mono: true },
-      { key: 'Evidence',    val: agent.evidenceQuality },
+      { key: 'Input Dose',  val: `${rawDose} ${convUnitMode==='flat'?agent.flatUnit:agent.unit}`, mono: true },
     ];
+    if (convUnitMode === 'flat') {
+      inputRows.push({ key: 'Weight',     val: `${weight} kg`, mono: true });
+      inputRows.push({ key: 'Wt-Based',   val: `${weightBasedDose.toFixed(4)} µg/kg/min`, mono: true });
+    }
+    inputRows.push({ key: 'Factor', val: `×${agent.factor}`, mono: true });
+    inputRows.push({ key: 'Evidence', val: agent.evidenceQuality });
+
     let ih = '';
     inputRows.forEach(r => {
       ih += `<div class="conv-bd-row">
@@ -614,7 +761,7 @@ function updateConverter() {
       { key: 'Agent',       val: 'Norepinephrine' },
       { key: 'Alias',       val: 'Levophed' },
       { key: 'Equiv. Dose', val: `${nee.toFixed(4)} µg/kg/min`, mono: true },
-      { key: 'Calculation', val: `${dose} × ${agent.factor} = ${nee.toFixed(4)}`, mono: true },
+      { key: 'Calculation', val: `${weightBasedDose.toFixed(4)} × ${agent.factor} = ${nee.toFixed(4)}`, mono: true },
     ];
     let oh = '';
     outputRows.forEach(r => {
@@ -627,13 +774,19 @@ function updateConverter() {
 
     const ex = document.getElementById('convExplain');
     ex.className = 'conv-explain show';
+    const convStep = convUnitMode === 'flat'
+      ? `<strong>Step 1 — Weight Conversion:</strong> <code>${rawDose} ${agent.flatUnit} ÷ ${weight} kg = ${weightBasedDose.toFixed(4)} µg/kg/min</code><br>
+         <strong>Step 2 — NEE Factor:</strong> <code>${weightBasedDose.toFixed(4)} × ${agent.factor} = ${nee.toFixed(4)} µg/kg/min NE</code>`
+      : `<strong>Formula:</strong> <code>${rawDose} ${agent.unit} × ${agent.factor} = ${nee.toFixed(4)} µg/kg/min NE</code>`;
+
     ex.innerHTML = `
       <strong>💊 ${agent.name} → 💉 Norepinephrine Conversion</strong><br><br>
-      <strong>Formula:</strong> <code>${dose} ${agent.unit} × ${agent.factor} = ${nee.toFixed(4)} µg/kg/min NE</code><br><br>
+      ${convStep}<br><br>
       <strong>Evidence Basis:</strong> ${agent.evidence}<br>
       <strong>Source Studies:</strong> ${agent.sourceStudies}<br><br>
       <strong>Clinical Notes:</strong> ${agent.notes}<br><br>
-      <em style="font-size:10px;color:#888;">This means <strong>${dose} ${agent.unit}</strong> of ${agent.name} produces
+      <em style="font-size:10px;color:#888;">This means <strong>${rawDose} ${convUnitMode==='flat'?agent.flatUnit:agent.unit}</strong> of ${agent.name}
+      ${convUnitMode==='flat'?`(${weightBasedDose.toFixed(4)} µg/kg/min for a ${weight} kg patient) `:''}produces
       roughly the same vasoconstrictive effect as <strong>${nee.toFixed(4)} µg/kg/min</strong> of norepinephrine.</em>`;
   } else {
     document.getElementById('convNeeValue').textContent = '—';
@@ -644,27 +797,48 @@ function updateConverter() {
   }
 }
 
-// ── MULTI-AGENT CALCULATOR ──
+// ═══════════════════════════════════════════════════════════
+//  MULTI-AGENT CALCULATOR
+// ═══════════════════════════════════════════════════════════
+
 function calculateNEE() {
   let total = 0, activeCount = 0;
   const contributions = [];
+  const weight = getWeight();
+  let missingWeight = false;
 
   AGENTS.forEach(a => {
     const input = document.getElementById('dose_' + a.key);
     const card  = document.getElementById('card_' + a.key);
     const label = document.getElementById('nee_' + a.key);
-    const dose  = parseFloat(input.value) || 0;
-    const nee   = dose * a.factor;
+    const wnote = document.getElementById('wnote_' + a.key);
+    const rawDose = parseFloat(input.value) || 0;
+    const mode = calcUnitModes[a.key] || 'weight';
 
-    if (dose > 0) {
-      activeCount++;
-      card.classList.add('active');
-      contributions.push({ agent: a, dose, nee });
+    card.classList.remove('active', 'needs-weight');
+    if (wnote) wnote.classList.remove('show');
+
+    if (rawDose > 0) {
+      const wbDose = toWeightBased(rawDose, mode, weight);
+      if (wbDose === null) {
+        missingWeight = true;
+        card.classList.add('needs-weight');
+        if (wnote) wnote.classList.add('show');
+        label.textContent = 'NEE: ⚠️ need wt';
+      } else {
+        const nee = wbDose * a.factor;
+        activeCount++;
+        card.classList.add('active');
+        contributions.push({
+          agent: a, rawDose, mode, wbDose, nee,
+          displayDose: mode === 'flat' ? `${rawDose} mcg/min → ${wbDose.toFixed(4)} µg/kg/min` : `${rawDose} ${a.unit}`
+        });
+        label.textContent = `NEE: ${nee.toFixed(4)}`;
+        total += nee;
+      }
     } else {
-      card.classList.remove('active');
+      label.textContent = 'NEE: 0.000';
     }
-    label.textContent = `NEE: ${nee.toFixed(4)}`;
-    total += nee;
   });
 
   document.getElementById('neeValue').textContent = total.toFixed(4);
@@ -672,11 +846,14 @@ function calculateNEE() {
   updateMapRatio(total);
 
   const names = contributions.map(c => c.agent.name).join(' + ');
-  document.getElementById('neeSubtext').textContent = activeCount === 0
+  let subtext = activeCount === 0
     ? 'Enter vasopressor doses above. Active agents: 0'
     : `Active agents (${activeCount}): ${names}`;
+  if (missingWeight) subtext += ' | ⚠️ Some agents need patient weight for mcg/min conversion';
+  document.getElementById('neeSubtext').textContent = subtext;
 
   updateBreakdown(contributions, total);
+  checkWeightWarning();
 }
 
 function updateSeverity(total, activeCount) {
@@ -714,7 +891,7 @@ function updateBreakdown(contributions, total) {
   contributions.sort((a, b) => b.nee - a.nee);
 
   let html = `<tr>
-    <th>Agent</th><th>Dose</th><th>Unit</th>
+    <th>Agent</th><th>Input Dose</th><th>Wt-Based Dose</th>
     <th>Factor</th><th>NEE (µg/kg/min)</th>
     <th>% of Total</th><th>Contribution</th>
   </tr>`;
@@ -722,10 +899,14 @@ function updateBreakdown(contributions, total) {
   contributions.forEach(c => {
     const pct = total > 0 ? (c.nee / total * 100) : 0;
     const bw  = Math.max(2, Math.min(100, pct));
+    const inputDisplay = c.mode === 'flat'
+      ? `${c.rawDose} mcg/min`
+      : `${c.rawDose} ${c.agent.unit}`;
+    const wbDisplay = `${c.wbDose.toFixed(4)} µg/kg/min`;
     html += `<tr class="active-row">
       <td><strong>${c.agent.name}</strong><br><span style="font-size:9px;color:#888;">${c.agent.alias}</span></td>
-      <td class="mono">${c.dose}</td>
-      <td>${c.agent.unit}</td>
+      <td class="mono">${inputDisplay}</td>
+      <td class="mono">${wbDisplay}</td>
       <td class="mono">×${c.agent.factor}</td>
       <td class="mono">${c.nee.toFixed(4)}</td>
       <td class="mono">${pct.toFixed(1)}%</td>
@@ -742,61 +923,121 @@ function updateBreakdown(contributions, total) {
   table.innerHTML = html;
 }
 
-// ── RESET ──
+// ═══════════════════════════════════════════════════════════
+//  RESET
+// ═══════════════════════════════════════════════════════════
+
 function resetAll() {
   AGENTS.forEach(a => {
     document.getElementById('dose_' + a.key).value = '';
     document.getElementById('nee_' + a.key).textContent = 'NEE: 0.000';
-    document.getElementById('card_' + a.key).classList.remove('active');
+    document.getElementById('card_' + a.key).classList.remove('active', 'needs-weight');
+    const wnote = document.getElementById('wnote_' + a.key);
+    if (wnote) wnote.classList.remove('show');
+    calcUnitModes[a.key] = 'weight';
+    const toggle = document.getElementById('toggle_' + a.key);
+    if (toggle) {
+      toggle.querySelectorAll('.card-unit-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.unit === 'weight');
+      });
+    }
+    document.getElementById('unit_' + a.key).textContent = a.unit;
   });
+
+  document.getElementById('weightInput').value = '';
   document.getElementById('mapInput').value = '';
   document.getElementById('neeValue').textContent = '0.000';
   document.getElementById('neeSubtext').textContent = 'Enter vasopressor doses above. Active agents: 0';
   document.getElementById('mapNeeRatio').textContent = 'MAP/NEE: —';
   document.getElementById('mapNeeRatio').style.color = '#003366';
   document.getElementById('breakdownSection').style.display = 'none';
+  document.getElementById('weightWarning').classList.remove('show');
   const pills = document.querySelectorAll('.severity-pill');
   pills.forEach(p => p.classList.remove('active'));
   pills[0].classList.add('active');
 
+  convUnitMode = 'weight';
   document.getElementById('convAgent').value = '';
   document.getElementById('convDose').value = '';
   document.getElementById('convUnit').textContent = '—';
   document.getElementById('convNeeValue').textContent = '—';
+  document.getElementById('convUnitToggle').style.display = 'none';
   document.getElementById('convBdInput').innerHTML = '<div class="empty-state">Select an agent and enter a dose.</div>';
   document.getElementById('convBdOutput').innerHTML = '<div class="empty-state">Norepinephrine equivalent will appear here.</div>';
   document.getElementById('convExplain').className = 'conv-explain';
   document.getElementById('convExplain').innerHTML = '';
 }
 
-// ── INIT ──
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+
 document.addEventListener('DOMContentLoaded', function() {
   buildAgentGrid();
   buildLegend();
   buildConverterSelect();
 
-  document.getElementById('convAgent').addEventListener('change', updateConverter);
+  // Converter
+  document.getElementById('convAgent').addEventListener('change', function() {
+    convUnitMode = 'weight';
+    updateConverter();
+  });
   document.getElementById('convDose').addEventListener('input', updateConverter);
 
+  // Converter unit toggle
+  document.getElementById('convUnitToggle').addEventListener('click', function(e) {
+    const btn = e.target.closest('.unit-toggle-btn');
+    if (!btn) return;
+    convUnitMode = btn.dataset.unit;
+    this.querySelectorAll('.unit-toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const agent = getAgent(document.getElementById('convAgent').value);
+    if (agent) {
+      document.getElementById('convUnit').textContent =
+        convUnitMode === 'flat' ? agent.flatUnit : agent.unit;
+    }
+    updateConverter();
+  });
+
+  // Calculator inputs
   document.getElementById('agentGrid').addEventListener('input', function(e) {
     if (e.target.classList.contains('agent-input')) calculateNEE();
   });
+
+  // Calculator card unit toggles
+  document.getElementById('agentGrid').addEventListener('click', function(e) {
+    const btn = e.target.closest('.card-unit-btn');
+    if (!btn) return;
+    const key = btn.dataset.key;
+    const unit = btn.dataset.unit;
+    calcUnitModes[key] = unit;
+    const agent = getAgent(key);
+    const toggle = document.getElementById('toggle_' + key);
+    toggle.querySelectorAll('.card-unit-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('unit_' + key).textContent =
+      unit === 'flat' ? agent.flatUnit : agent.unit;
+    calculateNEE();
+  });
+
+  // Weight & MAP
+  document.getElementById('weightInput').addEventListener('input', function() {
+    calculateNEE();
+    updateConverter();
+  });
   document.getElementById('mapInput').addEventListener('input', function() {
     const total = AGENTS.reduce((sum, a) => {
-      return sum + (parseFloat(document.getElementById('dose_' + a.key).value) || 0) * a.factor;
+      const dose = parseFloat(document.getElementById('dose_' + a.key).value) || 0;
+      const mode = calcUnitModes[a.key] || 'weight';
+      const wbDose = toWeightBased(dose, mode, getWeight());
+      return sum + (wbDose !== null ? wbDose * a.factor : 0);
     }, 0);
     updateMapRatio(total);
   });
 
+  // Reset
   document.getElementById('resetBtn').addEventListener('click', resetAll);
 });
 </script>
 </body>
 </html>
-
-							<script>
-                            	
-							</script>
-                        </body>
-                        </html>
-                    
